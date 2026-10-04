@@ -1,0 +1,10 @@
+# Ma'lumotlar bazasi: foydalanuvchilar, parol xeshlari, sessiyalar
+*.db
+*.db-journal
+
+# Foydalanuvchilar yuklagan rasmlar
+uploads/
+
+# Python
+__pycache__/
+*.pyc

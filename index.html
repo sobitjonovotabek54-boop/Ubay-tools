@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#173d32">
+    <meta name="description" content="Каталог инструментов Ubay Tools: фото, модели и подробные характеристики товаров.">
+    <title>Ubay Tools — каталог инструментов</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Onest:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header id="site-header" class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/" data-link aria-label="Ubay Tools — главная">
+          <span class="brand-mark">U<span>.</span></span>
+          <span class="brand-name">UBAY <b>TOOLS</b></span>
+        </a>
+        <nav id="main-nav" class="main-nav" aria-label="Основная навигация">
+          <a href="/" data-link data-nav="home">Главная</a>
+          <a href="/catalog" data-link data-nav="catalog">Каталог</a>
+          <a href="/admin" data-link data-nav="admin" data-show="admin" hidden>Админ-панель</a>
+          <a href="/register" data-link data-nav="register" data-show="guest" class="nav-mobile-only">Регистрация</a>
+        </nav>
+        <div class="header-actions">
+          <div class="header-group" data-show="guest">
+            <a class="button button-ghost" href="/login" data-link>Войти</a>
+            <a class="button button-primary header-register" href="/register" data-link>Регистрация</a>
+          </div>
+          <div class="header-group" data-show="user" hidden>
+            <button class="button button-primary button-add" type="button" data-add-product aria-label="Добавить товар">
+              <i data-icon="plus"></i><span class="add-label">Добавить товар</span>
+            </button>
+            <div class="user-chip">
+              <span id="user-avatar" class="avatar">U</span>
+              <span class="user-meta"><b id="user-name"></b><small id="user-role"></small></span>
+            </div>
+            <button id="logout-button" class="icon-button" type="button" aria-label="Выйти" title="Выйти"><i data-icon="logout"></i></button>
+          </div>
+          <button id="menu-button" class="icon-button menu-button" type="button" aria-label="Меню" aria-expanded="false" aria-controls="main-nav"><i data-icon="menu"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Главная -->
+      <section class="page" data-page="home" hidden>
+        <div class="hero">
+          <div class="container hero-inner">
+            <div class="hero-copy">
+              <span class="pill"><span class="pulse"></span> Каталог инструментов</span>
+              <h1>Профессиональные инструменты <span class="accent">в одном каталоге</span></h1>
+              <p class="lead">Находите, сравнивайте и изучайте товары Ubay Tools: реальные фото, модели и подробные технические характеристики.</p>
+              <form id="hero-search" class="hero-search" role="search">
+                <i data-icon="search"></i>
+                <label class="visually-hidden" for="hero-search-input">Поиск по каталогу</label>
+                <input id="hero-search-input" type="search" placeholder="Например, дрель или номер модели" autocomplete="off">
+                <button class="button button-accent" type="submit">Найти</button>
+              </form>
+              <div class="hero-actions">
+                <a class="button button-glass" href="/catalog" data-link>Открыть каталог <i data-icon="arrow"></i></a>
+                <a class="button button-glass" href="/register" data-link data-show="guest">Создать аккаунт</a>
+                <button class="button button-glass" type="button" data-add-product data-show="user" hidden>Добавить товар</button>
+              </div>
+              <dl class="hero-stats">
+                <div><dt>товаров</dt><dd id="stat-products">0</dd></div>
+                <div><dt>категорий</dt><dd id="stat-categories">0</dd></div>
+                <div><dt>с фото</dt><dd id="stat-photos">0</dd></div>
+              </dl>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+              <div id="hero-showcase" class="showcase"></div>
+              <div class="float-card">
+                <span class="float-icon"><i data-icon="box"></i></span>
+                <span><b id="float-count">0</b><small>товаров в каталоге</small></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="section">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Почему Ubay Tools</p>
+                <h2 class="section-title">Всё о товаре — на одной странице</h2>
+              </div>
+              <p class="section-sub">Каталог создан для быстрого выбора: никаких лишних шагов, только нужная информация.</p>
+            </div>
+            <div class="features">
+              <article class="feature">
+                <span class="feature-icon"><i data-icon="list"></i></span>
+                <h3>Подробные характеристики</h3>
+                <p>У каждого товара есть модель, описание и технические параметры для точного сравнения.</p>
+              </article>
+              <article class="feature">
+                <span class="feature-icon"><i data-icon="image"></i></span>
+                <h3>Реальные фотографии</h3>
+                <p>Изображения загружают владельцы товаров — вы видите именно то, что предлагается.</p>
+              </article>
+              <article class="feature">
+                <span class="feature-icon"><i data-icon="zap"></i></span>
+                <h3>Мгновенный поиск</h3>
+                <p>Ищите по названию, модели, категории или любой характеристике — результат сразу.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="home-categories-section" class="section section-alt" hidden>
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Категории</p>
+                <h2 class="section-title">Выберите направление</h2>
+              </div>
+              <a class="button button-ghost" href="/catalog" data-link>Все категории <i data-icon="arrow"></i></a>
+            </div>
+            <div id="home-categories" class="category-tiles"></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Новинки</p>
+                <h2 class="section-title">Недавно добавленные товары</h2>
+              </div>
+              <a class="button button-ghost" href="/catalog" data-link>Весь каталог <i data-icon="arrow"></i></a>
+            </div>
+            <div id="home-latest" class="product-grid"></div>
+            <div id="home-latest-empty" class="empty-state" hidden>
+              <span class="empty-icon"><i data-icon="box"></i></span>
+              <h3>Каталог пока пуст</h3>
+              <p>Станьте первым, кто добавит товар со своими фотографиями и характеристиками.</p>
+              <a class="button button-primary" href="/register" data-link data-show="guest">Создать аккаунт</a>
+              <button class="button button-primary" type="button" data-add-product data-show="user" hidden>Добавить первый товар</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section-tight">
+          <div class="container">
+            <div class="cta-band">
+              <div>
+                <h2>Есть что добавить в каталог?</h2>
+                <p>Создайте аккаунт и разместите свои товары за пару минут.</p>
+              </div>
+              <a class="button button-light button-lg" href="/register" data-link data-show="guest">Зарегистрироваться <i data-icon="arrow"></i></a>
+              <button class="button button-light button-lg" type="button" data-add-product data-show="user" hidden>Добавить товар <i data-icon="arrow"></i></button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- Каталог -->
+      <section class="page" data-page="catalog" hidden>
+        <div class="page-hero">
+          <div class="container">
+            <nav class="breadcrumbs" aria-label="Навигационная цепочка"><a href="/" data-link>Главная</a><span>/</span><span>Каталог</span></nav>
+            <h1 class="page-title">Каталог товаров <span id="product-count" class="count-badge">0</span></h1>
+            <p id="catalog-status" class="page-sub">Каталог загружается...</p>
+          </div>
+        </div>
+        <div class="container catalog-body">
+          <div class="catalog-toolbar">
+            <label class="search-box">
+              <i data-icon="search"></i>
+              <span class="visually-hidden">Поиск товара</span>
+              <input id="search-input" type="search" placeholder="Поиск по названию, модели или характеристикам" autocomplete="off">
+              <kbd>/</kbd>
+            </label>
+            <label class="sort-control">
+              <span class="visually-hidden">Сортировка</span>
+              <select id="sort-select" class="select">
+                <option value="recent">Сначала новые</option>
+                <option value="name">По названию</option>
+              </select>
+            </label>
+          </div>
+          <div class="catalog-layout">
+            <aside class="filters" aria-label="Категории">
+              <h2>Категории</h2>
+              <nav id="category-list" class="category-list"></nav>
+              <div class="filters-note">
+                <i data-icon="info"></i>
+                <p>Фото и характеристики товаров добавляют их владельцы.</p>
+              </div>
+            </aside>
+            <div class="product-area">
+              <div id="product-grid" class="product-grid" aria-live="polite"></div>
+              <div id="empty-state" class="empty-state" hidden>
+                <span class="empty-icon"><i data-icon="box"></i></span>
+                <h3 id="empty-title">Каталог пока пуст</h3>
+                <p id="empty-description">Добавьте первый товар со своими фотографиями и характеристиками.</p>
+                <button id="empty-add-button" class="button button-primary" type="button" data-add-product>Добавить первый товар</button>
+              </div>
+              <div id="no-results" class="empty-state" hidden>
+                <span class="empty-icon"><i data-icon="search"></i></span>
+                <h3>Ничего не найдено</h3>
+                <p>Попробуйте изменить запрос или выбрать другую категорию.</p>
+                <button id="reset-filters" class="button button-ghost" type="button">Сбросить фильтры</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Вход -->
+      <section class="page auth-page" data-page="login" hidden>
+        <div class="container">
+          <div class="auth-shell">
+            <aside class="auth-aside">
+              <span class="brand brand-light"><span class="brand-mark">U<span>.</span></span><span class="brand-name">UBAY <b>TOOLS</b></span></span>
+              <div>
+                <h2>С возвращением!</h2>
+                <p>Войдите, чтобы добавлять товары, обновлять фото и характеристики.</p>
+              </div>
+              <ul class="perks">
+                <li><span><i data-icon="check"></i></span>Управление своими товарами</li>
+                <li><span><i data-icon="check"></i></span>Загрузка фото до 5 МБ</li>
+                <li><span><i data-icon="check"></i></span>Безопасное хранение данных</li>
+              </ul>
+            </aside>
+            <div class="auth-main">
+              <form id="login-form" class="auth-form" novalidate>
+                <h1>Вход в аккаунт</h1>
+                <p class="auth-lead">Введите email и пароль, указанные при регистрации.</p>
+                <label class="field">
+                  <span>Email</span>
+                  <input id="login-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+                </label>
+                <label class="field">
+                  <span>Пароль</span>
+                  <input id="login-password" name="password" type="password" maxlength="200" autocomplete="current-password" placeholder="Ваш пароль" required>
+                </label>
+                <p id="login-error" class="form-error" role="alert"></p>
+                <button id="login-submit" class="button button-primary button-lg button-wide" type="submit">Войти</button>
+                <p class="auth-switch">Нет аккаунта? <a href="/register" data-link>Зарегистрироваться</a></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Регистрация -->
+      <section class="page auth-page" data-page="register" hidden>
+        <div class="container">
+          <div class="auth-shell">
+            <aside class="auth-aside">
+              <span class="brand brand-light"><span class="brand-mark">U<span>.</span></span><span class="brand-name">UBAY <b>TOOLS</b></span></span>
+              <div>
+                <h2>Добро пожаловать!</h2>
+                <p>Создайте аккаунт, чтобы размещать свои товары в каталоге Ubay Tools.</p>
+              </div>
+              <ul class="perks">
+                <li><span><i data-icon="check"></i></span>Бесплатная регистрация</li>
+                <li><span><i data-icon="check"></i></span>Свои фото и характеристики</li>
+                <li><span><i data-icon="check"></i></span>Товары видны всем посетителям</li>
+              </ul>
+            </aside>
+            <div class="auth-main">
+              <form id="register-form" class="auth-form" novalidate>
+                <h1>Регистрация</h1>
+                <p class="auth-lead">Заполните поля ниже — это займёт меньше минуты.</p>
+                <label class="field">
+                  <span>Имя</span>
+                  <input id="register-name" name="name" type="text" maxlength="80" autocomplete="name" placeholder="Как к вам обращаться" required>
+                </label>
+                <label class="field">
+                  <span>Email</span>
+                  <input id="register-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+                </label>
+                <div class="field-row">
+                  <label class="field">
+                    <span>Пароль</span>
+                    <input id="register-password" name="password" type="password" minlength="8" maxlength="200" autocomplete="new-password" placeholder="Минимум 8 символов" required>
+                  </label>
+                  <label class="field">
+                    <span>Повторите пароль</span>
+                    <input id="register-password-repeat" name="password-repeat" type="password" minlength="8" maxlength="200" autocomplete="new-password" placeholder="Ещё раз" required>
+                  </label>
+                </div>
+                <p id="register-error" class="form-error" role="alert"></p>
+                <button id="register-submit" class="button button-primary button-lg button-wide" type="submit">Создать аккаунт</button>
+                <p class="auth-switch">Уже есть аккаунт? <a href="/login" data-link>Войти</a></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Админ-панель -->
+      <section class="page" data-page="admin" hidden>
+        <div class="page-hero">
+          <div class="container">
+            <nav class="breadcrumbs" aria-label="Навигационная цепочка"><a href="/" data-link>Главная</a><span>/</span><span>Админ-панель</span></nav>
+            <h1 class="page-title">Админ-панель</h1>
+            <p class="page-sub">Управление пользователями и товарами каталога.</p>
+          </div>
+        </div>
+        <div class="container admin-body">
+          <div id="admin-denied" class="empty-state" hidden>
+            <span class="empty-icon"><i data-icon="lock"></i></span>
+            <h3>Доступ только для администраторов</h3>
+            <p>У вашего аккаунта нет прав администратора. Обратитесь к владельцу каталога.</p>
+            <a class="button button-primary" href="/catalog" data-link>Перейти в каталог</a>
+          </div>
+          <div id="admin-content">
+            <div class="stats-grid">
+              <div class="stat-card"><span class="stat-icon"><i data-icon="users"></i></span><span><b id="admin-stat-users">0</b><small>Пользователей</small></span></div>
+              <div class="stat-card"><span class="stat-icon is-accent"><i data-icon="shield"></i></span><span><b id="admin-stat-admins">0</b><small>Администраторов</small></span></div>
+              <div class="stat-card"><span class="stat-icon"><i data-icon="box"></i></span><span><b id="admin-stat-products">0</b><small>Товаров</small></span></div>
+              <div class="stat-card"><span class="stat-icon is-accent"><i data-icon="grid"></i></span><span><b id="admin-stat-categories">0</b><small>Категорий</small></span></div>
+            </div>
+
+            <div class="tabs" role="tablist" aria-label="Разделы админ-панели">
+              <button class="tab" type="button" role="tab" data-tab="users" aria-selected="true" aria-controls="admin-panel-users">Пользователи <span id="tab-count-users" class="tab-count">0</span></button>
+              <button class="tab" type="button" role="tab" data-tab="products" aria-selected="false" aria-controls="admin-panel-products">Товары <span id="tab-count-products" class="tab-count">0</span></button>
+            </div>
+
+            <div id="admin-panel-users" class="panel" role="tabpanel" data-tab-panel="users">
+              <div class="panel-head">
+                <h2>Пользователи</h2>
+                <label class="search-box search-box-sm">
+                  <i data-icon="search"></i>
+                  <span class="visually-hidden">Поиск пользователя</span>
+                  <input id="admin-user-search" type="search" placeholder="Имя или email" autocomplete="off">
+                </label>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>Пользователь</th><th>Роль</th><th>Товаров</th><th>Регистрация</th><th class="actions">Действия</th></tr></thead>
+                  <tbody id="admin-users"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="admin-panel-products" class="panel" role="tabpanel" data-tab-panel="products" hidden>
+              <div class="panel-head">
+                <h2>Товары</h2>
+                <div class="panel-tools">
+                  <label class="search-box search-box-sm">
+                    <i data-icon="search"></i>
+                    <span class="visually-hidden">Поиск товара</span>
+                    <input id="admin-product-search" type="search" placeholder="Название, модель, владелец" autocomplete="off">
+                  </label>
+                  <button class="button button-primary" type="button" data-add-product><i data-icon="plus"></i>Добавить</button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>Товар</th><th>Категория</th><th>Владелец</th><th>Обновлён</th><th class="actions">Действия</th></tr></thead>
+                  <tbody id="admin-products"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 404 -->
+      <section class="page" data-page="notfound" hidden>
+        <div class="container notfound">
+          <p class="notfound-code">404</p>
+          <h1>Страница не найдена</h1>
+          <p>Возможно, ссылка устарела или в адресе есть опечатка.</p>
+          <a class="button button-primary button-lg" href="/" data-link>На главную</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a class="brand brand-light" href="/" data-link><span class="brand-mark">U<span>.</span></span><span class="brand-name">UBAY <b>TOOLS</b></span></a>
+          <p>Каталог профессиональных инструментов с фото и подробными характеристиками.</p>
+        </div>
+        <nav class="footer-nav" aria-label="Ссылки в подвале">
+          <a href="/" data-link>Главная</a>
+          <a href="/catalog" data-link>Каталог</a>
+          <a href="/login" data-link data-show="guest">Вход</a>
+          <a href="/register" data-link data-show="guest">Регистрация</a>
+          <a href="/admin" data-link data-show="admin" hidden>Админ-панель</a>
+        </nav>
+        <div class="footer-bottom">
+          <span>© <span id="year"></span> Ubay Tools</span>
+          <span>Информация о товарах добавляется владельцами</span>
+        </div>
+      </div>
+    </footer>
+
+    <dialog id="product-dialog" class="dialog dialog-wide">
+      <form id="product-form" class="dialog-panel" novalidate>
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Закрыть"><i data-icon="close"></i></button>
+        <p class="eyebrow">Управление каталогом</p>
+        <h2 id="product-dialog-title">Новый товар</h2>
+        <p class="dialog-subtitle">Добавляйте только те данные и фотографии, которые вы вправе использовать.</p>
+        <div class="form-columns">
+          <div class="form-main">
+            <label class="field"><span>Название товара <i>*</i></span><input id="product-name" name="name" maxlength="120" required placeholder="Например, электродрель"></label>
+            <div class="field-row">
+              <label class="field"><span>Модель</span><input id="product-model" name="model" maxlength="80" placeholder="Номер модели"></label>
+              <label class="field"><span>Категория</span><input id="product-category" name="category" maxlength="60" list="category-options" placeholder="Например, электроинструменты"></label>
+            </div>
+            <datalist id="category-options"></datalist>
+            <label class="field"><span>Краткое описание</span><textarea id="product-description" name="description" maxlength="1200" rows="3" placeholder="Коротко о товаре"></textarea></label>
+            <div class="specs-heading"><span>Характеристики</span><button id="add-spec-button" class="text-button" type="button">＋ Добавить характеристику</button></div>
+            <div id="spec-list" class="spec-list"></div>
+          </div>
+          <div class="form-aside">
+            <span class="field-label">Фото товара</span>
+            <label id="image-drop" class="image-drop" for="product-image-input">
+              <img id="image-preview" alt="Выбранное фото товара" hidden>
+              <span id="image-placeholder" class="image-placeholder"><b>↑</b><strong>Выбрать фото</strong><small>JPG, PNG или WebP<br>до 5 МБ</small></span>
+            </label>
+            <input id="product-image-input" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp">
+            <button id="remove-image-button" class="text-button text-danger" type="button" hidden>Удалить фото</button>
+          </div>
+        </div>
+        <p id="product-error" class="form-error" role="alert"></p>
+        <div class="dialog-actions"><button class="button button-ghost" type="button" data-close-dialog>Отмена</button><button id="product-save" class="button button-primary" type="submit">Сохранить</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="detail-dialog" class="dialog dialog-wide">
+      <div id="detail-content" class="dialog-panel"></div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
