@@ -18,8 +18,10 @@ from uuid import uuid4
 
 
 ROOT = Path(__file__).resolve().parent
-UPLOAD_DIR = ROOT / "uploads"
+UPLOAD_DIR = Path(os.environ.get("UBAY_UPLOADS", ROOT / "uploads"))
 DATABASE = Path(os.environ.get("UBAY_DATABASE", ROOT / "ubay_catalog.db"))
+# За прокси (Render и др.) реальный IP клиента приходит в X-Forwarded-For.
+TRUST_PROXY = os.environ.get("UBAY_TRUST_PROXY", "1" if os.environ.get("RENDER") else "") == "1"
 MAX_BODY = 7 * 1024 * 1024
 MAX_IMAGE = 5 * 1024 * 1024
 PASSWORD_ITERATIONS = 310_000
@@ -264,6 +266,10 @@ class CatalogHandler(BaseHTTPRequestHandler):
         return self.session_cookie(token, SESSION_SECONDS)
 
     def client_ip(self):
+        if TRUST_PROXY:
+            forwarded = self.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+            if forwarded:
+                return forwarded
         return self.client_address[0]
 
     def auth_blocked(self):
@@ -598,11 +604,11 @@ class CatalogHandler(BaseHTTPRequestHandler):
         self.wfile.write(content)
 
 
-def create_admin(email, name="Admin"):
+def create_admin(email, name="Admin", password=None):
     email = email.strip().lower()
     if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
         raise SystemExit("Некорректный адрес email.")
-    password = secrets.token_urlsafe(12)
+    password = password or secrets.token_urlsafe(12)
     password_hash = make_password_hash(password)
     with connect_db() as db:
         existing = db.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
@@ -616,18 +622,36 @@ def create_admin(email, name="Admin"):
                 "INSERT INTO users(name, email, password_hash, created_at, is_admin) VALUES (?, ?, ?, ?, 1)",
                 (name, email, password_hash, int(time.time())),
             )
-    print(f"Аккаунт администратора готов.\nEmail: {email}\nПароль: {password}")
+    return email, password
+
+
+def ensure_env_admin():
+    email = os.environ.get("UBAY_ADMIN_EMAIL", "").strip().lower()
+    password = os.environ.get("UBAY_ADMIN_PASSWORD", "")
+    if not email or not password:
+        return
+    if len(password) < 8:
+        raise SystemExit("UBAY_ADMIN_PASSWORD должен содержать не менее 8 символов.")
+    with connect_db() as db:
+        user = db.execute("SELECT password_hash, is_admin FROM users WHERE email = ?", (email,)).fetchone()
+    if user and user["is_admin"] and check_password(password, user["password_hash"]):
+        return
+    create_admin(email, os.environ.get("UBAY_ADMIN_NAME", "Admin"), password)
+    print(f"Аккаунт администратора {email} настроен из переменных окружения.")
 
 
 def main():
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, "reconfigure"):
-            stream.reconfigure(encoding="utf-8", errors="replace")
+            stream.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
     initialize_db()
     if len(sys.argv) >= 3 and sys.argv[1] == "create-admin":
-        create_admin(sys.argv[2], " ".join(sys.argv[3:]) or "Admin")
+        email, password = create_admin(sys.argv[2], " ".join(sys.argv[3:]) or "Admin")
+        print(f"Аккаунт администратора готов.\nEmail: {email}\nПароль: {password}")
         return
-    host = os.environ.get("HOST", "127.0.0.1")
+    ensure_env_admin()
+    # Хостинги (Render и др.) задают PORT и ждут подключения извне.
+    host = os.environ.get("HOST", "0.0.0.0" if "PORT" in os.environ else "127.0.0.1")
     port = int(os.environ.get("PORT", "8000"))
     server = ThreadingHTTPServer((host, port), CatalogHandler)
     print(f"Каталог Ubay Tools: http://{host}:{port}")

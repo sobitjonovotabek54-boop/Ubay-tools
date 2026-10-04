@@ -60,6 +60,29 @@ Bir IP manzildan kirish yoki ro‘yxatdan o‘tishga 15 daqiqa ichida 10 tadan o
 
 ## Deploy
 
+### Render
+
+New → Web Service, repozitoriyni tanlang va quyidagilarni kiriting:
+
+| Maydon | Qiymat |
+|---|---|
+| Language / Runtime | **Python 3** |
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `python server.py` |
+
+Environment bo‘limida:
+
+| O‘zgaruvchi | Qiymat |
+|---|---|
+| `UBAY_ADMIN_EMAIL` | admin emaili |
+| `UBAY_ADMIN_PASSWORD` | admin paroli (kamida 8 belgi) |
+
+Server ishga tushganda shu ma’lumotlar bilan admin hisobini yaratadi yoki yangilaydi. `PORT` berilgani uchun server avtomatik `0.0.0.0` da tinglaydi, Render ortida esa foydalanuvchi IP manzili `X-Forwarded-For` dan olinadi.
+
+**Muhim:** Render’ning bepul tarifida disk vaqtinchalik: har deploy yoki qayta ishga tushishda baza va yuklangan rasmlar o‘chadi (admin hisobi esa o‘zgaruvchilardan qayta yaratiladi). Ma’lumotlar saqlanib qolishi uchun pullik tarifda Persistent Disk ulang (masalan, `/var/data`) va `UBAY_DATABASE=/var/data/ubay_catalog.db`, `UBAY_UPLOADS=/var/data/uploads` o‘zgaruvchilarini qo‘shing.
+
+### Boshqa hostinglar
+
 Python server ishga tushira oladigan hostingga deploy qiling. Ishlab chiqarishda `HOST=0.0.0.0` belgilang, platformaning `PORT` qiymatidan foydalaning va `UBAY_DATABASE` ni doimiy diskka yo‘naltiring. Yuklangan `uploads/` papkasi hamda SQLite bazasi deploylar orasida saqlanishi kerak. HTTPS reverse proxy ortida `X-Forwarded-Proto: https` yuboring.
 
 Ro‘yxatdan o‘tish hozir emailni tasdiqlamaydi. Ommaviy ishga tushirishdan oldin email tasdiqlash va bazaning muntazam backupini sozlash tavsiya etiladi. Reverse proxy ortida rate limit proxy IP manziliga qo‘llanadi, shuning uchun proxy darajasida ham cheklov qo‘ying.
