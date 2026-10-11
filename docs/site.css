@@ -1,0 +1,41 @@
+/* Дополнения статического каталога поверх styles.css */
+html { scroll-padding-top: 90px; }
+.hero-single { grid-template-columns: minmax(0, 1fr); padding: 84px 0 92px; }
+.hero-single .hero-copy { max-width: 780px; }
+.hero-stats { flex-wrap: wrap; row-gap: 18px; }
+
+.catalog-section { padding-top: 24px; }
+.catalog-section .section-head { margin-bottom: 24px; }
+.catalog-section .section-title { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+
+.category-tiles { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+.category-tile { padding: 0; overflow: hidden; cursor: pointer; font: inherit; text-align: left; }
+.tile-cover { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: linear-gradient(145deg, #e8f1ec 0%, #d2e2d9 100%); }
+.tile-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
+.category-tile:hover .tile-cover img { transform: scale(1.06); }
+.tile-cover .tile-icon { position: absolute; left: 16px; bottom: 16px; margin: 0; }
+.tile-text { display: flex; flex-direction: column; gap: 2px; padding: 16px 18px 18px; }
+.category-tile .tile-arrow { top: auto; bottom: 20px; }
+.category-tiles.is-collapsed .category-tile:nth-child(n + 13) { display: none; }
+.tiles-more { display: flex; justify-content: center; margin-top: 24px; }
+
+.product-media { cursor: pointer; }
+.load-more-wrap { display: flex; justify-content: center; margin-top: 28px; }
+.load-more-wrap .button { min-width: 240px; }
+.button-telegram { color: #fff; background: #229ed9; box-shadow: 0 8px 18px -10px rgb(34 158 217 / .9); }
+.button-telegram:hover { background: #1b8bc0; }
+.detail-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+.detail-description { white-space: pre-line; }
+.product-article { color: var(--accent-dark); }
+
+@media (max-width: 640px) {
+  .hero-single { padding: 52px 0 60px; }
+  .header-actions .button-primary { width: 42px; padding: 0 !important; }
+  .category-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .category-tiles.is-collapsed .category-tile:nth-child(n + 9) { display: none; }
+  .tile-text { padding: 12px 14px 14px; }
+  .category-tile b { font-size: 15px; }
+  .category-tile small { font-size: 13px; }
+  .category-tile .tile-arrow { display: none; }
+  .tile-cover .tile-icon { width: 36px; height: 36px; left: 10px; bottom: 10px; font-size: 15px; }
+}
