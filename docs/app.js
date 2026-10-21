@@ -471,22 +471,26 @@ async function init() {
   });
   $("#year").textContent = new Date().getFullYear();
 
-  try {
-    const response = await fetch("data/products.json", { cache: "no-cache" });
-    if (!response.ok) throw new Error(response.statusText);
-    const data = await response.json();
-    state.products = data.products || [];
-    state.categories = data.categories || [];
-    state.sections = data.sections || [];
-    state.categoryMap = Object.fromEntries(state.categories.map((c) => [c.name, c]));
-
-    if (data.updated) {
-      $("#updated-note").textContent = `Данные обновлены ${new Date(data.updated).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })}`;
+  let data = window.CATALOG_DATA;
+  if (!data) {
+    try {
+      const response = await fetch("data/products.json", { cache: "no-cache" });
+      if (!response.ok) throw new Error(response.statusText);
+      data = await response.json();
+    } catch {
+      $("#load-error").hidden = false;
+      $("#catalog-status").textContent = "Не удалось загрузить каталог";
+      return;
     }
-  } catch {
-    $("#load-error").hidden = false;
-    $("#catalog-status").textContent = "Не удалось загрузить каталог";
-    return;
+  }
+
+  state.products = data.products || [];
+  state.categories = data.categories || [];
+  state.sections = data.sections || [];
+  state.categoryMap = Object.fromEntries(state.categories.map((c) => [c.name, c]));
+
+  if (data.updated) {
+    $("#updated-note").textContent = `Данные обновлены ${new Date(data.updated).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })}`;
   }
 
   $("#stat-products").textContent = state.products.length;

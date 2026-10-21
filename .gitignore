@@ -17,6 +17,7 @@ tools/telegram_config.json
 # Zaxira nusxalar (bazaning zaxirasida foydalanuvchi ma'lumotlari bor)
 *.bak_*
 *.bak
+*.log
 
 # Skript keshi
 tools/.cache/
