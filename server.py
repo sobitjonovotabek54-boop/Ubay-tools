@@ -578,6 +578,8 @@ class CatalogHandler(BaseHTTPRequestHandler):
                 self.send_error(404)
                 return
             file_path = UPLOAD_DIR / filename
+        elif relative.startswith("img/"):
+            file_path = ROOT / "docs" / relative
         elif relative in ALLOWED_STATIC:
             file_path = ROOT / relative
         elif relative in PAGE_ROUTES:

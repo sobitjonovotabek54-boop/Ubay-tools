@@ -59,11 +59,12 @@
           <div class="section-head">
             <div>
               <p class="eyebrow">Категории</p>
-              <h2 class="section-title">Выберите направление</h2>
+              <h2 class="section-title">Содержание каталога UBAY TOOLS</h2>
             </div>
-            <p class="section-sub">Нажмите на категорию, чтобы увидеть все её товары.</p>
+            <p class="section-sub">10 основных разделов инструментов и оборудования. Выберите категорию для быстрого перехода к товарам.</p>
           </div>
-          <div id="category-tiles" class="category-tiles"></div>
+          <div id="section-tabs" class="section-tabs" role="tablist" aria-label="Разделы каталога"></div>
+          <div id="category-tiles" class="category-tiles-container"></div>
         </div>
       </section>
 
@@ -86,14 +87,17 @@
             <label class="sort-control">
               <span class="visually-hidden">Сортировка</span>
               <select id="sort-select" class="select">
-                <option value="default">По категориям</option>
-                <option value="name">По названию</option>
+                <option value="default">По разделам каталога</option>
+                <option value="name">По названию (А–Я)</option>
               </select>
             </label>
           </div>
           <div class="catalog-layout">
             <aside class="filters" aria-label="Категории">
               <h2>Категории</h2>
+              <div class="category-filter-search">
+                <input id="cat-filter-input" type="search" placeholder="Фильтр категорий..." autocomplete="off">
+              </div>
               <nav id="category-list" class="category-list"></nav>
               <div class="filters-note">
                 <i data-icon="info"></i>
