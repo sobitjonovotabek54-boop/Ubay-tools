@@ -28,12 +28,17 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+}
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   margin: 0;
+  overflow-x: clip;
   color: var(--ink);
   background: var(--bg);
   font: 400 16px/1.6 var(--font-body);
@@ -110,7 +115,7 @@ a { color: inherit; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgb(255 255 255 / .85);
+  background: rgb(255 255 255 / .92);
   border-bottom: 1px solid var(--line);
   -webkit-backdrop-filter: saturate(1.5) blur(14px);
   backdrop-filter: saturate(1.5) blur(14px);
@@ -181,8 +186,16 @@ a { color: inherit; }
 .pill { display: inline-flex; align-items: center; gap: 9px; padding: 8px 16px; color: #e6f1ec; background: rgb(255 255 255 / .08); border: 1px solid rgb(255 255 255 / .16); border-radius: 999px; font-size: 14px; font-weight: 700; }
 .pulse { width: 8px; height: 8px; background: #ff9b5b; border-radius: 50%; box-shadow: 0 0 0 0 rgb(255 155 91 / .7); animation: pulse 2.2s infinite; }
 @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgb(255 155 91 / 0); } 100% { box-shadow: 0 0 0 0 rgb(255 155 91 / 0); } }
-.hero h1 { margin: 24px 0 20px; font: 800 clamp(38px, 5.2vw, 66px)/1.05 var(--font-head); letter-spacing: -.025em; text-wrap: balance; }
-.hero h1 .accent { color: #ff9b5b; background: linear-gradient(90deg, #ffbe8f, #ff7d43); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.hero h1 { margin: 24px 0 20px; font: 800 clamp(30px, 8vw, 66px)/1.08 var(--font-head); letter-spacing: -.025em; text-wrap: balance; }
+.hero h1 .accent { color: #ff9b5b; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero h1 .accent {
+    background: linear-gradient(90deg, #ffbe8f, #ff7d43);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
 .lead { max-width: 580px; margin: 0; color: #cddfd7; font-size: clamp(17px, 1.5vw, 19px); line-height: 1.65; }
 .hero-search { max-width: 580px; display: flex; align-items: center; gap: 8px; margin-top: 34px; padding: 7px 7px 7px 18px; color: var(--ink); background: #fff; border-radius: 16px; box-shadow: var(--shadow-lg); }
 .hero-search .icon { color: var(--muted); }
@@ -682,9 +695,25 @@ a { color: inherit; }
   .icon-button { width: 42px; height: 42px; }
   .hero-inner { padding: 52px 0 60px; }
   .hero-visual { display: none; }
-  .hero-search { padding-left: 14px; }
-  .hero-search .button { padding: 0 16px; }
-  .hero-stats { gap: 28px; }
+  .hero-search {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+    padding: 10px;
+  }
+  .hero-search > .icon { display: none; }
+  .hero-search input {
+    flex: 1 1 100%;
+    min-height: 44px;
+    padding: 0 10px;
+    font-size: 16px;
+  }
+  .hero-search .button {
+    width: 100%;
+    --h: 46px;
+    padding: 0 16px;
+  }
+  .hero-stats { gap: 20px 28px; }
   .hero-stats dd { font-size: 28px; }
   .section { padding: 64px 0; }
   .section-tight { padding-top: 0; }
@@ -694,6 +723,10 @@ a { color: inherit; }
   .tile-icon { width: 42px; height: 42px; margin-bottom: 12px; }
   .tile-arrow { top: 20px; right: 18px; }
   .category-tile b { font-size: 17px; }
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)); gap: 14px; }
+  .product-body { padding: 14px; }
+  .product-title { font-size: 16px; }
+  .product-footer { flex-wrap: wrap; gap: 8px; }
   .cta-band { padding: 32px 24px; border-radius: 24px; }
   .cta-band .button { width: 100%; }
   .page-hero { padding: 36px 0 32px; }
@@ -719,13 +752,18 @@ a { color: inherit; }
   .panel-head { flex-direction: column; align-items: stretch; padding: 18px; }
   .panel-tools { flex-direction: column; align-items: stretch; }
   .search-box-sm { width: 100%; max-width: none; flex: 0 0 auto; }
-  .dialog { border-radius: 22px; }
+  .dialog {
+    width: min(100vw - 16px, 900px);
+    max-height: min(100vh - 16px, 100dvh - 16px);
+    border-radius: 22px;
+  }
   .dialog-panel { padding: 30px 20px 22px; }
   .dialog-close { top: 14px; right: 14px; }
   .dialog-panel h2 { font-size: 25px; }
-  .dialog-actions .button { flex: 1; }
+  .dialog-actions { flex-wrap: wrap; }
+  .dialog-actions .button { flex: 1; min-width: 120px; }
   .spec-row { grid-template-columns: 1fr 1fr 42px; gap: 6px; }
-  .toast { bottom: 16px; }
+  .toast { bottom: max(16px, env(safe-area-inset-bottom)); }
 }
 
 @media (max-width: 560px) {

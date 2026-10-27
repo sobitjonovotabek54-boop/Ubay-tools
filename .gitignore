@@ -18,6 +18,7 @@ tools/telegram_config.json
 *.bak_*
 *.bak
 *.log
+cloudflared.exe
 
 # Skript keshi
 tools/.cache/
