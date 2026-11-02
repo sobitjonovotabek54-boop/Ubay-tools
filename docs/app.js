@@ -3,6 +3,8 @@ const PAGE_SIZE = 24;
 const ICONS = {
   search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  "arrow-left": '<path d="m15 18-6-6 6-6"/>',
+  "arrow-right": '<path d="m9 18 6-6-6-6"/>',
   chevron: '<path d="m6 9 6 6 6-6"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   close: '<path d="M18 6 6 18M6 6l12 12"/>',
@@ -312,18 +314,115 @@ function setFilter({ category = state.category, sectionId = state.sectionId, sea
   }
 }
 
-/* ---------- Карточка товара (модалка) ---------- */
+/* ---------- Карточка товара (модалка со слайдером) ---------- */
+
+let currentProduct = null;
+let currentSlideIdx = 0;
+
+function setGallerySlide(idx) {
+  if (!currentProduct) return;
+  const images = (currentProduct.images && currentProduct.images.length)
+    ? currentProduct.images
+    : [currentProduct.image || categoryImage(currentProduct.category)].filter(Boolean);
+  if (!images.length) return;
+
+  if (idx < 0) idx = images.length - 1;
+  if (idx >= images.length) idx = 0;
+  currentSlideIdx = idx;
+
+  const imgEl = $("#gallery-current-img");
+  if (imgEl) {
+    imgEl.style.opacity = "0.3";
+    imgEl.src = images[currentSlideIdx];
+    setTimeout(() => { imgEl.style.opacity = "1"; }, 100);
+  }
+
+  const idxEl = $("#gallery-current-idx");
+  if (idxEl) idxEl.textContent = currentSlideIdx + 1;
+
+  $$("#gallery-thumbs .thumb-btn").forEach((btn, i) => {
+    btn.classList.toggle("is-active", i === currentSlideIdx);
+  });
+}
+
+function setupGallerySwipe() {
+  const main = $("#gallery-main");
+  if (!main) return;
+  let startX = 0;
+  let startY = 0;
+
+  main.addEventListener("touchstart", (e) => {
+    if (e.touches && e.touches.length) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  main.addEventListener("touchend", (e) => {
+    if (e.changedTouches && e.changedTouches.length) {
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+      const diffX = endX - startX;
+      const diffY = endY - startY;
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 30) {
+        if (diffX < 0) {
+          setGallerySlide(currentSlideIdx + 1); // свайп влево -> следующее фото
+        } else {
+          setGallerySlide(currentSlideIdx - 1); // свайп вправо -> предыдущее фото
+        }
+      }
+    }
+  }, { passive: true });
+}
 
 function openDetails(product) {
+  currentProduct = product;
+  currentSlideIdx = 0;
+
   const specs = (product.specs || []).map((spec) => `<div class="detail-spec"><dt>${escapeHtml(spec.name)}</dt><dd>${escapeHtml(spec.value)}</dd></div>`).join("");
-  const imgSrc = product.image || categoryImage(product.category);
   const secTitle = product.section_title || state.categoryMap[product.category]?.section_title || "";
+  const images = (product.images && product.images.length)
+    ? product.images
+    : [product.image || categoryImage(product.category)].filter(Boolean);
+
+  let galleryHtml = "";
+  if (images.length) {
+    const hasMultiple = images.length > 1;
+    galleryHtml = `
+      <div class="detail-gallery">
+        <div class="gallery-main" id="gallery-main">
+          <img class="detail-img" id="gallery-current-img" src="${escapeHtml(images[0])}" alt="${escapeHtml(product.name)}">
+          ${hasMultiple ? `
+            <button class="gallery-arrow gallery-prev" type="button" data-gallery-action="prev" aria-label="Предыдущее фото">
+              ${icon("arrow-left")}
+            </button>
+            <button class="gallery-arrow gallery-next" type="button" data-gallery-action="next" aria-label="Следующее фото">
+              ${icon("arrow-right")}
+            </button>
+            <span class="gallery-badge"><span id="gallery-current-idx">1</span> / <span id="gallery-total">${images.length}</span></span>
+            <span class="gallery-hint">Листайте фото ← →</span>
+          ` : ""}
+        </div>
+        ${hasMultiple ? `
+          <div class="gallery-thumbs" id="gallery-thumbs">
+            ${images.map((img, idx) => `
+              <button class="thumb-btn ${idx === 0 ? "is-active" : ""}" type="button" data-gallery-slide="${idx}" aria-label="Фото ${idx + 1}">
+                <img src="${escapeHtml(img)}" alt="">
+              </button>
+            `).join("")}
+          </div>
+        ` : ""}
+      </div>
+    `;
+  } else {
+    galleryHtml = placeholder(product, "detail-image");
+  }
 
   $("#detail-content").innerHTML = `
     <button class="dialog-close" type="button" data-close-dialog aria-label="Закрыть">${icon("close")}</button>
     <div class="detail-layout">
       <div class="detail-media-wrap">
-        ${imgSrc ? `<img class="detail-img" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(product.name)}">` : placeholder(product, "detail-image")}
+        ${galleryHtml}
       </div>
       <div class="detail-copy">
         <p class="eyebrow">${escapeHtml(secTitle ? `${secTitle} · ` : "")}${escapeHtml(product.category)}</p>
@@ -336,6 +435,8 @@ function openDetails(product) {
         </div>
       </div>
     </div>`;
+
+  setupGallerySwipe();
 
   if (!detailDialog.open) detailDialog.showModal();
 }
@@ -383,6 +484,24 @@ document.addEventListener("click", (event) => {
   const filter = event.target.closest("[data-filter]");
   if (filter) {
     setFilter({ category: filter.dataset.filter, sectionId: 0 });
+    return;
+  }
+
+  // Переключение фото в галерее (стрелки)
+  const galleryArrow = event.target.closest("[data-gallery-action]");
+  if (galleryArrow) {
+    if (galleryArrow.dataset.galleryAction === "prev") {
+      setGallerySlide(currentSlideIdx - 1);
+    } else {
+      setGallerySlide(currentSlideIdx + 1);
+    }
+    return;
+  }
+
+  // Клик по миниатюре фото
+  const thumb = event.target.closest("[data-gallery-slide]");
+  if (thumb) {
+    setGallerySlide(Number(thumb.dataset.gallerySlide));
     return;
   }
 
@@ -457,6 +576,22 @@ $("#load-more").addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", (event) => {
+  if (detailDialog && detailDialog.open) {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      setGallerySlide(currentSlideIdx - 1);
+      return;
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      setGallerySlide(currentSlideIdx + 1);
+      return;
+    }
+    if (event.key === "Escape") {
+      detailDialog.close();
+      return;
+    }
+  }
   if (event.key !== "/" || ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
   event.preventDefault();
   $("#search-input").focus();
